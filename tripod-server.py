@@ -18,16 +18,16 @@ def capture():
 	print("file name: %s" & file_name)
 	encoded_string = ""
 	with open(file_name, "rb") as image_file:
-		encoded_string = base64.b64encode(image_file.read())
+		encoded_string = str(base64.b64encode(image_file.read()))
 
-	print("encoded string: %s" % encoded_string)
+	encoded_string = encoded_string.lstrip("b'").rstrip("'")
 
-	response = {"name" : file_name , 
+	response = {"name" : file_name ,
 				"cameraModel" : "Canon E0S 60D",
 				"base64Image" : encoded_string }
 
 	return jsonify(response)
-	
+
 
 def capture_image():
 	log()
@@ -66,5 +66,4 @@ def log():
 
 
 if __name__ == "__main__":
-    # app.run(debug = True)
-    capture_image()
+    app.run(host= '0.0.0.0', debug = True)
