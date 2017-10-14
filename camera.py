@@ -16,7 +16,7 @@ class Camera(object):
 		self.context = gp.gp_context_new()
 		self.camera = gp.check_result(gp.gp_camera_new())
 		gp.check_result(gp.gp_camera_init(self.camera, self.context))
-		log()
+		self.log()
 
 	def capture_image(self):
 		print("Capturing image..")
@@ -24,7 +24,7 @@ class Camera(object):
 
 	def save_image(self):
 		file_name = "IMG_" + str(uuid.uuid4())[:6]
-		gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE, self.context))
+		file_path = gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE, self.context))
 		
 		target = os.path.join('./captured', file_name)
 		
@@ -33,12 +33,13 @@ class Camera(object):
 		gp.check_result(gp.gp_file_save(camera_file, target))
 		return target
 
-	def log():
+	def log(self):
 		logging.basicConfig(
 			format='%(levelname)s: %(name)s: %(message)s', level=logging.WARNING)
 		gp.check_result(gp.use_python_logging())
 
 if __name__ == "__main__":
     # app.run(debug = True)
-    camera = Camera
+    camera = Camera()
+    print("starting camera")
     camera.capture_image()
