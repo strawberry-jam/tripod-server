@@ -5,8 +5,26 @@ import os
 import subprocess
 import sys
 import uuid
-
 import gphoto2 as gp
+import base64
+
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/capture', methods=['POST'])
+def capture():
+	file_name = capture_image()
+	encoded_string = ""
+	with open(file_name, "rb") as image_file:
+		encoded_string = base64.b64encode(image_file.read())
+
+	response = {"name" : file_name , 
+				"cameraModel" : "Canon E0S 60D",
+				"base64Image" : encoded_string }
+
+	return jsonify(response)
+	
 
 def capture_image():
 	log()
@@ -18,7 +36,7 @@ def capture_image():
 	target = save_image(camera, camera_context)
 	# open_image(target)
 	exit_camera(camera, camera_context)
-	return 0
+	return target
 
 def open_image(target):
 	subprocess.call(['xdg-open', target])
@@ -43,5 +61,6 @@ def log():
 		format='%(levelname)s: %(name)s: %(message)s', level=logging.WARNING)
 	gp.check_result(gp.use_python_logging())
 
+
 if __name__ == "__main__":
-    sys.exit(capture_image())	
+    app.run(debug = True)
