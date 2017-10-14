@@ -17,14 +17,16 @@ def capture():
 	file_name = capture_image()
 	encoded_string = ""
 	with open(file_name, "rb") as image_file:
-		encoded_string = base64.b64encode(image_file.read())
+		encoded_string = str(base64.b64encode(image_file.read()))
 
-	response = {"name" : file_name , 
+	encoded_string = encoded_string.lstrip("b'").rstrip("'")
+
+	response = {"name" : file_name ,
 				"cameraModel" : "Canon E0S 60D",
 				"base64Image" : encoded_string }
 
 	return jsonify(response)
-	
+
 
 def capture_image():
 	log()
