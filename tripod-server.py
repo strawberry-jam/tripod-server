@@ -15,9 +15,12 @@ app = Flask(__name__)
 @app.route('/capture', methods=['POST'])
 def capture():
 	file_name = capture_image()
+	print("file name: %s" & file_name)
 	encoded_string = ""
 	with open(file_name, "rb") as image_file:
 		encoded_string = base64.b64encode(image_file.read())
+
+	print("encoded string: %s" % encoded_string)
 
 	response = {"name" : file_name , 
 				"cameraModel" : "Canon E0S 60D",
@@ -63,4 +66,5 @@ def log():
 
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    # app.run(debug = True)
+    capture_image()
